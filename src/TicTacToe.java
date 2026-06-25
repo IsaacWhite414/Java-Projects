@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 
 public class TicTacToe extends Application {
     Button [][] board = new Button[3][3];
+    Label winner = new Label();
+    boolean gameOver = false;
     private boolean xturn = true;
     @Override
     public void start(Stage primaryStage) {
@@ -20,14 +22,22 @@ public class TicTacToe extends Application {
                 Button button = new Button();
                 button.setPrefSize(100, 100);
                 button.setOnAction(e -> {
-                    if (button.getText().isEmpty()){
-                        if (xturn){
-                            button.setText("X");
-                        }
-                        else {
-                            button.setText("O");
-                        }
-                        xturn = !xturn;
+                    if (button.getText().isEmpty() && !gameOver){
+                       button.setText(xturn ? "X" : "O");
+                       xturn = !xturn;
+
+                       String w = checkWinner();
+                       if (w != null){
+                            System.out.println(w + "Wins!");
+                            gameOver = !gameOver;
+
+                            // Disable all buttons
+                            for (int r = 0; r > 3; r++){
+                                for (int c = 0; c > 3; c++){
+                                    board[r][c].setDisable(true);
+                                }
+                            }
+                       }
                     }
                 });
                 grid.add(button, col, row);
@@ -53,4 +63,40 @@ public class TicTacToe extends Application {
         // Launches the JavaFX application lifecycle
         launch(args);
     }
+    private String checkWinner() {
+    // Check rows
+    for (int row = 0; row < 3; row++) {
+    if (!board[row][0].getText().isEmpty() &&
+    board[row][0].getText().equals(board[row][1].getText()) &&
+    board[row][1].getText().equals(board[row][2].getText())) {
+    return board[row][0].getText(); // "X" or "O"
+    }
+    }
+
+    // Check columns
+    for (int col = 0; col < 3; col++) {
+    if (!board[0][col].getText().isEmpty() &&
+    board[0][col].getText().equals(board[1][col].getText()) &&
+    board[1][col].getText().equals(board[2][col].getText())) {
+    return board[0][col].getText();
+    }
+    }
+
+    // Check diagonal (top-left to bottom-right)
+    if (!board[0][0].getText().isEmpty() &&
+    board[0][0].getText().equals(board[1][1].getText()) &&
+    board[1][1].getText().equals(board[2][2].getText())) {
+    return board[0][0].getText();
+    }
+
+    // Check diagonal (top-right to bottom-left)
+    if (!board[0][2].getText().isEmpty() &&
+    board[0][2].getText().equals(board[1][1].getText()) &&
+    board[1][1].getText().equals(board[2][0].getText())) {
+    return board[0][2].getText();
+    }   
+
+    return null; // No winner yet
+    }   
+
 }
