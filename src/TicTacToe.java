@@ -6,9 +6,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.util.Random;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 public class TicTacToe extends Application {
     Button [][] board = new Button[3][3];
+    Random random = new Random();
     Label winner = new Label();
     boolean gameOver = false;
     private boolean xturn = true;
@@ -23,21 +27,27 @@ public class TicTacToe extends Application {
                 button.setPrefSize(100, 100);
                 button.setOnAction(e -> {
                     if (button.getText().isEmpty() && !gameOver){
-                       button.setText(xturn ? "X" : "O");
+                       button.setText("X");
                        xturn = !xturn;
 
                        String w = checkWinner();
-                       if (w != null){
-                            System.out.println(w + "Wins!");
-                            gameOver = !gameOver;
+                       if (w == null){
+                            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+                            pause.setOnFinished(event -> {
+                                aiMove();
 
-                            // Disable all buttons
-                            for (int r = 0; r > 3; r++){
-                                for (int c = 0; c > 3; c++){
-                                    board[r][c].setDisable(true);
+                                String w2 = checkWinner();
+                                if (w2 != null){
+                                    System.out.println(w2 + "" + "Wins!");
+                                    gameOver = true;
                                 }
-                            }
-                       }
+                            });
+                            pause.play();
+                        }
+                        else{
+                            winner.setText(w + "" + "Wins!");
+                            gameOver = true;
+                        }
                     }
                 });
                 grid.add(button, col, row);
@@ -97,6 +107,15 @@ public class TicTacToe extends Application {
     }   
 
     return null; // No winner yet
-    }   
+    }  
+    
+    private void aiMove(){
+        int moveR, moveC;
+        do {
+            moveR = random.nextInt(3);
+            moveC = random.nextInt(3);
+        } while (!board[moveR][moveC].getText().isEmpty());
+        board[moveR][moveC].setText("O");
+    }
 
 }
