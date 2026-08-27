@@ -18,7 +18,7 @@ public class TicTacToe extends Application {
     private boolean xturn = true;
     @Override
     public void start(Stage primaryStage) {
-        // 1. Create UI 
+        // Create UI 
         GridPane grid = new GridPane();
 
         for (int row = 0; row < 3; row++){
@@ -60,10 +60,10 @@ public class TicTacToe extends Application {
         }
         
 
-        // 4. Create a scene with specific dimensions (Width, Height)
+        // Create a scene with specific dimensions (Width, Height)
         Scene scene = new Scene(grid);
 
-        // 5. Configure and display the main window (Stage)
+        // Configure and display the main window (Stage)
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
         primaryStage.show();
